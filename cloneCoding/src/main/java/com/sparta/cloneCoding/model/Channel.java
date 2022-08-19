@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @NoArgsConstructor
 @Getter
-@Entity
+@Entity(name = "channel")
 public class Channel {
 
     @Id
