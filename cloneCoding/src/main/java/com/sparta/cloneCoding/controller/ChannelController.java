@@ -24,4 +24,9 @@ public class ChannelController {
     public String createChannel(@RequestBody ChannelRequestDto requestDto){
         return channelService.createChannel(requestDto);
     }
+
+    @DeleteMapping("/{channel_id}")
+    public String deleteChannel(@PathVariable Long channel_id){
+        return channelService.deleteChannel(channel_id);
+    }
 }

@@ -33,4 +33,13 @@ public class ChannelService {
             return "채널 생성 완료";
         }
     }
+
+    @Transactional
+    public String deleteChannel(Long channel_id){
+        Channel channel = channelRepository.findById(channel_id).orElseThrow(
+                () -> new IllegalArgumentException("##### Can't find Channel/"+channel_id)
+        );
+        channelRepository.delete(channel);
+        return "채널 삭제 성공";
+    }
 }
