@@ -2,8 +2,13 @@ package com.sparta.cloneCoding.service;
 
 import com.sparta.cloneCoding.dto.ChannelRequestDto;
 import com.sparta.cloneCoding.model.Channel;
+import com.sparta.cloneCoding.model.User;
 import com.sparta.cloneCoding.repository.ChannelRepository;
+import com.sparta.cloneCoding.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -14,6 +19,7 @@ import java.util.Optional;
 @Service
 public class ChannelService {
     private final ChannelRepository channelRepository;
+    private final UserRepository userRepository;    //유저정보 조회용
 
     @Transactional
     public List<Channel> getChannelList(){
@@ -22,7 +28,15 @@ public class ChannelService {
 
     @Transactional
     public String createChannel(ChannelRequestDto requestDto){
-        Channel channel = new Channel(requestDto);
+        // SecurityContextHolder에 저장된 유저 정보(id) 불러오기
+        // getName()시 String 형태의 userid가 불러와지기 때문에 long형태로 변환
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Long user_id = Long.parseLong(auth.getName());
+        // db에서 username 조회
+        User user = userRepository.findById(user_id).orElseThrow(
+                () -> new UsernameNotFoundException("유저정보를 찾을 수 없습니다"));
+
+        Channel channel = new Channel(requestDto, user);
         Optional<Channel> dupleNameCheck = channelRepository.findByChannelName(channel.getChannelName());
         if(dupleNameCheck.isPresent()){
             return "해당 이름은 채널, 사용자 이름 또는 사용자 그룹에서 이미 사용 중입니다.";
