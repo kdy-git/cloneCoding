@@ -25,14 +25,14 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
-    
+
     @Transactional
     public UserResponseDto signup(UserRequestDto userRequestDto) {
-        if (userRepository.existsByNickname(userRequestDto.getNickname())) {
+        if (userRepository.existsByUsername(userRequestDto.getUsername())) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다");
         }
 
-       User user = userRequestDto.toUser(passwordEncoder);
+        User user = userRequestDto.toUser(passwordEncoder);
         return UserResponseDto.of(userRepository.save(user));
     }
 
