@@ -8,11 +8,11 @@ import lombok.Setter;
 public class ChannelRequestDto {
     private String channelName;
     private String description;
-    private Boolean isPrivate;
 
-    public ChannelRequestDto(String channelName, String description, Boolean isPrivate){
+    public ChannelRequestDto(String channelName, String description){
         this.channelName = channelName;
         this.description = description;
-        this.isPrivate = isPrivate;
+
+
     }
 }
