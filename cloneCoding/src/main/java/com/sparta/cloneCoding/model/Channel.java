@@ -23,9 +23,6 @@ public class Channel {
     @Column(nullable = false)
     private String description;
 
-    @Column(nullable = false)
-    private Boolean isPrivate;
-
     // roomCreator
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -38,7 +35,6 @@ public class Channel {
     public Channel(ChannelRequestDto requestDto, User user){
         this.channelName = requestDto.getChannelName();
         this.description = requestDto.getDescription();
-        this.isPrivate = requestDto.getIsPrivate();
         this.user = user;
         // 채널 생성시 유저 초대하지 않아 빈 리스트 선언
         this.invitedUserChannels = new ArrayList<>();
