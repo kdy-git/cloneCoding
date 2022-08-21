@@ -30,11 +30,11 @@ public class TokenProvider {
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;            // 30분
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7일
 
-    private final Key key;
+    private static Key key = null;
 
     public TokenProvider(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        this.key = Keys.hmacShaKeyFor(keyBytes);
+        key = Keys.hmacShaKeyFor(keyBytes);
     }
 
     public TokenDto generateTokenDto(Authentication authentication) {
@@ -68,7 +68,7 @@ public class TokenProvider {
                 .build();
     }
 
-    public Authentication getAuthentication(String accessToken) {
+    public static Authentication getAuthentication(String accessToken) {
         // 토큰 복호화
         Claims claims = parseClaims(accessToken);
 
@@ -104,7 +104,7 @@ public class TokenProvider {
         return false;
     }
 
-    private Claims parseClaims(String accessToken) {
+    private static Claims parseClaims(String accessToken) {
         try {
             return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
         } catch (ExpiredJwtException e) {
