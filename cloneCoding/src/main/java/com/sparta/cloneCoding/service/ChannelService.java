@@ -28,10 +28,11 @@ public class ChannelService {
     // 채널 조회
     @Transactional
     public List<ChannelListDto> getChannelList(){
-        User user = userRepository.findById(SecurityUtil.getCurrentUSerId()).orElseThrow(
-                () -> new IllegalArgumentException("로그인이 필요합니다"));
+        User user = getCurrentUser();
         List<ChannelListDto> userChannelList = new ArrayList<>();
 
+        // 채널 생성시 inviteUserChannel에 본인도 넣을것인지? 넣는다면 어떻게?
+        // 본인도 넣는다면 생성한 채널 추가부분 필요없음
         //생성한 채널 추가
         List<Channel> channels = channelRepository.findAllByUser_Id(user.getId());
         for(Channel channel:channels){
@@ -52,9 +53,7 @@ public class ChannelService {
     // 채널 생성
     @Transactional
     public String createChannel(ChannelRequestDto requestDto){
-        // 로그인한 유저 정보 확인
-        User user = userRepository.findById(SecurityUtil.getCurrentUSerId()).orElseThrow(
-                () -> new IllegalArgumentException("로그인이 필요합니다"));
+        User user = getCurrentUser();
 
         Channel channel = new Channel(requestDto, user);
         Optional<Channel> dupleNameCheck = channelRepository.findByChannelName(channel.getChannelName());
@@ -91,6 +90,7 @@ public class ChannelService {
         return "채널 초대 성공";
     }
 
+    // 채널 삭제 (채널 생성자만 가능, 삭제시 채널에 참가했던 유저 리스트도 삭제)
     @Transactional
     public String deleteChannel(Long channelId){
         Channel channel = channelRepository.findById(channelId).orElseThrow(
@@ -98,5 +98,28 @@ public class ChannelService {
         );
         channelRepository.delete(channel);
         return "채널 삭제 성공";
+    }
+
+    // 채널 나가기 (채널 생성자의 경우 나가기 시 채널 삭제)
+    public String exitChannel(Long channelId){
+        User user = getCurrentUser();
+        Channel channel = channelRepository.findById(channelId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 채널입니다"));
+
+        if(user.getId().equals(channel.getUser().getId())){
+            // 채널 생성자의 경우 채널 및 초대된 유저들도 나가기(cascade)
+            channelRepository.delete(channel);
+            return "채널 삭제 및 나가기 성공";
+        } else{
+            InviteUserChannel inviteUserChannel = inviteUserChannelRepository.findByUserAndChannel(user, channel);
+            inviteUserChannelRepository.delete(inviteUserChannel);
+            return "채널 나가기 성공";
+        }
+
+    }
+
+    public User getCurrentUser(){
+        return userRepository.findById(SecurityUtil.getCurrentUSerId()).orElseThrow(
+                () -> new IllegalArgumentException("로그인이 필요합니다"));
     }
 }

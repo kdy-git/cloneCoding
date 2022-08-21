@@ -39,4 +39,10 @@ public class ChannelController {
     public String inviteChannel(@RequestBody ChannelInviteRequestDto channelInviteRequestDto){
         return channelService.inviteChannel(channelInviteRequestDto);
     }
+
+    // 채널 나가기
+    @DeleteMapping("/exit/{channelId}")
+    public String exitChannel(@PathVariable Long channelId){
+        return channelService.exitChannel(channelId);
+    }
 }
