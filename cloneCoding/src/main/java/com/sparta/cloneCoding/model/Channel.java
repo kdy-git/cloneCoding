@@ -30,10 +30,6 @@ public class Channel {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "channel_id")
-    private List<InvitedUserChannel> invitedUserChannels;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "channel_id")
     private List<InviteUserChannel> inviteUserChannel;
 
     public Channel(ChannelRequestDto requestDto, User user){
@@ -41,7 +37,7 @@ public class Channel {
         this.description = requestDto.getDescription();
         this.user = user;
         // 채널 생성시 유저 초대하지 않아 빈 리스트 선언
-        this.invitedUserChannels = new ArrayList<>();
+        this.inviteUserChannel = new ArrayList<>();
     }
 
     public Channel(ChannelRequestDto channelRequestDto, List<InviteUserChannel> inviteUserChannel, User user) {
