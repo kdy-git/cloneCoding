@@ -91,13 +91,19 @@ public class ChannelService {
     }
 
     // 채널 삭제 (채널 생성자만 가능, 삭제시 채널에 참가했던 유저 리스트도 삭제)
+    // 채널 나가기와 기능 중복
     @Transactional
     public String deleteChannel(Long channelId){
+        User user = getCurrentUser();
         Channel channel = channelRepository.findById(channelId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 채널입니다")
         );
-        channelRepository.delete(channel);
-        return "채널 삭제 성공";
+        if(user.getId().equals(channel.getUser().getId())){
+            channelRepository.delete(channel);
+            return "채널 삭제 및 나가기 성공";
+        } else{
+            return "채널 생성자만 채널을 삭제할 수 있습니다";
+        }
     }
 
     // 채널 나가기 (채널 생성자의 경우 나가기 시 채널 삭제)
