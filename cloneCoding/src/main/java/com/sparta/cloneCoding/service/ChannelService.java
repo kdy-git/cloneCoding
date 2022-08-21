@@ -5,9 +5,8 @@ import com.sparta.cloneCoding.model.Channel;
 import com.sparta.cloneCoding.model.User;
 import com.sparta.cloneCoding.repository.ChannelRepository;
 import com.sparta.cloneCoding.repository.UserRepository;
+import com.sparta.cloneCoding.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -28,11 +27,7 @@ public class ChannelService {
 
     @Transactional
     public String createChannel(ChannelRequestDto requestDto){
-        // SecurityContextHolder에 저장된 유저 정보(id) 불러오기
-        // getName()시 String 형태의 userid가 불러와지기 때문에 long형태로 변환
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Long user_id = Long.parseLong(auth.getName());
-        // db에서 username 조회
+        Long user_id = SecurityUtil.getCurrentUSerId();
         User user = userRepository.findById(user_id).orElseThrow(
                 () -> new UsernameNotFoundException("유저정보를 찾을 수 없습니다"));
 
