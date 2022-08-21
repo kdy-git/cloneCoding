@@ -32,15 +32,11 @@ public class Channel {
     @JoinColumn(name = "channel_id")
     private List<InvitedUserChannel> invitedUserChannels;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "channel_id")
     private List<InviteUserChannel> inviteUserChannel;
 
-    public Channel(ChannelRequestDto requestDto){
+    public Channel(ChannelRequestDto requestDto, User user){
         this.channelName = requestDto.getChannelName();
         this.description = requestDto.getDescription();
         this.user = user;
@@ -51,7 +47,6 @@ public class Channel {
     public Channel(ChannelRequestDto channelRequestDto, List<InviteUserChannel> inviteUserChannel, User user) {
         this.channelName = channelRequestDto.getChannelName();
         this.description = channelRequestDto.getDescription();
-        this.isPrivate = channelRequestDto.getIsPrivate();
         this.user = user;
         this.inviteUserChannel = inviteUserChannel;
     }
