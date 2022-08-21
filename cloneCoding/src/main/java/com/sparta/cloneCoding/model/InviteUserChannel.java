@@ -1,11 +1,13 @@
 package com.sparta.cloneCoding.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class InviteUserChannel {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,4 +22,8 @@ public class InviteUserChannel {
     @JoinColumn(name = "channel_id")
     private Channel channel;
 
+    public InviteUserChannel(User user, Channel channel){
+        this.user = user;
+        this.channel = channel;
+    }
 }
