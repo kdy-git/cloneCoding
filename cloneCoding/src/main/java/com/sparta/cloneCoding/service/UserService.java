@@ -13,8 +13,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public UserResponseDto getUserInfo(String nickname) {
-        return userRepository.findByNickname(nickname)
+    public UserResponseDto getUserInfo(String username) {
+        return userRepository.findByUsername(username)
                 .map(UserResponseDto::of)
                 .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
     }

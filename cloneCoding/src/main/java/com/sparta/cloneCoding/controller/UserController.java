@@ -20,8 +20,8 @@ public class UserController {
         return ResponseEntity.ok(userService.getMyInfo());
     }
 
-    @GetMapping("/{nickname}")
-    public ResponseEntity<UserResponseDto> getMyUserInfo(@PathVariable String nickname) {
-        return ResponseEntity.ok(userService.getUserInfo(nickname));
+    @GetMapping("/{username}")
+    public ResponseEntity<UserResponseDto> getMyUserInfo(@PathVariable String username) {
+        return ResponseEntity.ok(userService.getUserInfo(username));
     }
 }

@@ -20,7 +20,7 @@ public class ChannelController {
         return channelService.getChannelList();
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public String createChannel(@RequestBody ChannelRequestDto requestDto){
         return channelService.createChannel(requestDto);
     }
