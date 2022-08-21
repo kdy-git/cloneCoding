@@ -28,7 +28,7 @@ public class MessageService {
     private final InviteUserChannelRepository inviteUserChannelRepository;
 
     //채팅을 입력하기 위한 메서드.
-    //유효성검사 후 메세지, 유저정보를 채널에 저장
+    //유효성검사 후 메세지에 유저정보와 채널정보를 저장
     public MessageDto sendMessage(MessageDto messageDto, Long channelId) {
         String username = userService.getMyInfo().getUsername();
         Channel channel = validateRole(channelId);
