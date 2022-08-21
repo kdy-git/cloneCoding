@@ -36,7 +36,6 @@ public class Channel {
         this.channelName = requestDto.getChannelName();
         this.description = requestDto.getDescription();
         this.user = user;
-        // 채널 생성시 유저 초대하지 않아 빈 리스트 선언
         this.inviteUserChannel = new ArrayList<>();
     }
 

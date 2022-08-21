@@ -2,7 +2,7 @@ package com.sparta.cloneCoding.controller;
 
 import com.sparta.cloneCoding.dto.ChannelInviteRequestDto;
 import com.sparta.cloneCoding.dto.ChannelRequestDto;
-import com.sparta.cloneCoding.model.Channel;
+import com.sparta.cloneCoding.dto.ChannelListDto;
 import com.sparta.cloneCoding.service.ChannelService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +18,7 @@ public class ChannelController {
 
     // 로그인한 유저의 채널 목록 조회
     @GetMapping("/list")
-    public List<Channel> readChannel(){
+    public List<ChannelListDto> readChannel(){
         return channelService.getChannelList();
     }
 

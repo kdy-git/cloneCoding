@@ -1,0 +1,20 @@
+package com.sparta.cloneCoding.dto;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor
+public class ChannelListDto {
+    private Long channelId;
+    private String channelName;
+    private String description;
+    private boolean isOwner;
+
+    public ChannelListDto(Long id, String channelName, String description, boolean isOwner){
+        this.channelId = id;
+        this.channelName = channelName;
+        this.description = description;
+        this.isOwner = isOwner;
+    }
+}

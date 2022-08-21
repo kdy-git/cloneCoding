@@ -2,6 +2,7 @@ package com.sparta.cloneCoding.service;
 
 import com.sparta.cloneCoding.dto.ChannelInviteRequestDto;
 import com.sparta.cloneCoding.dto.ChannelRequestDto;
+import com.sparta.cloneCoding.dto.ChannelListDto;
 import com.sparta.cloneCoding.model.Channel;
 import com.sparta.cloneCoding.model.InviteUserChannel;
 import com.sparta.cloneCoding.model.User;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,10 +25,28 @@ public class ChannelService {
     private final MessageRepository messageRepository;
     
 
-    // 채널 조회 : 채널이름, 유저목록, 채널생성자만 출력하는걸로 수정예정
+    // 채널 조회
     @Transactional
-    public List<Channel> getChannelList(){
-        return channelRepository.findAll();
+    public List<ChannelListDto> getChannelList(){
+        User user = userRepository.findById(SecurityUtil.getCurrentUSerId()).orElseThrow(
+                () -> new IllegalArgumentException("로그인이 필요합니다"));
+        List<ChannelListDto> userChannelList = new ArrayList<>();
+
+        //생성한 채널 추가
+        List<Channel> channels = channelRepository.findAllByUser_Id(user.getId());
+        for(Channel channel:channels){
+            ChannelListDto channelListDto = new ChannelListDto(channel.getId(), channel.getChannelName(), channel.getDescription(), true);
+            userChannelList.add(channelListDto);
+        }
+
+        //초대된 채널 추가
+        channels = channelRepository.findAllByInviteUserChannel_UserId(user.getId());
+        for(Channel channel:channels){
+            ChannelListDto channelListDto = new ChannelListDto(channel.getId(), channel.getChannelName(), channel.getDescription(), false);
+            userChannelList.add(channelListDto);
+        }
+
+        return userChannelList;
     }
 
     // 채널 생성
@@ -43,6 +63,7 @@ public class ChannelService {
         } else if(requestDto.getChannelName().isEmpty()){
             return "채널 이름을 입력하세요";
         } else{
+
             channelRepository.save(channel);
             return "채널 생성 완료";
         }
