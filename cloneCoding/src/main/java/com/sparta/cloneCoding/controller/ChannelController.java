@@ -28,12 +28,6 @@ public class ChannelController {
         return channelService.createChannel(requestDto);
     }
 
-    // 채널 삭제
-    @DeleteMapping("/{channelId}")
-    public String deleteChannel(@PathVariable Long channelId){
-        return channelService.deleteChannel(channelId);
-    }
-
     // 채널 초대
     @PostMapping("/invite")
     public String inviteChannel(@RequestBody ChannelInviteRequestDto channelInviteRequestDto){
