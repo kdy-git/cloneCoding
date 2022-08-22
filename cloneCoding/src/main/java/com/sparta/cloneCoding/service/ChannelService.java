@@ -24,7 +24,6 @@ public class ChannelService {
     private final InviteUserChannelRepository inviteUserChannelRepository;
     private final MessageRepository messageRepository;
     private final InviteUserChannel inviteUserChannel;
-    
 
     // 채널 조회
     @Transactional

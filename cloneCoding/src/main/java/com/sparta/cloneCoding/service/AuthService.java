@@ -10,6 +10,7 @@ import com.sparta.cloneCoding.repository.UserRepository;
 import com.sparta.cloneCoding.repository.RefreshTokenRepository;
 import com.sparta.cloneCoding.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -28,12 +29,10 @@ public class AuthService {
 
     @Transactional
     public UserResponseDto signup(UserRequestDto userRequestDto) {
-        if (userRepository.existsByUsername(userRequestDto.getUsername())) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다");
-        }
 
         User user = userRequestDto.toUser(passwordEncoder);
         return UserResponseDto.of(userRepository.save(user));
+
     }
 
     @Transactional
