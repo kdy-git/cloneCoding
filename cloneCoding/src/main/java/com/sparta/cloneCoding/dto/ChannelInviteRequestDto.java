@@ -9,5 +9,5 @@ import java.util.List;
 @NoArgsConstructor
 public class ChannelInviteRequestDto {
     private Long channelId;
-    private List<Long> userList;
+    private String inviteUser;
 }
