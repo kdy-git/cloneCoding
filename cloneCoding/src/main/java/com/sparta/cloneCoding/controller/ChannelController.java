@@ -1,7 +1,8 @@
 package com.sparta.cloneCoding.controller;
 
+import com.sparta.cloneCoding.dto.ChannelInviteRequestDto;
 import com.sparta.cloneCoding.dto.ChannelRequestDto;
-import com.sparta.cloneCoding.model.Channel;
+import com.sparta.cloneCoding.dto.ChannelListDto;
 import com.sparta.cloneCoding.service.ChannelService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -15,18 +16,33 @@ public class ChannelController {
 
     private final ChannelService channelService;
 
+    // 로그인한 유저의 채널 목록 조회
     @GetMapping("/list")
-    public List<Channel> readChannel(){
+    public List<ChannelListDto> readChannel(){
         return channelService.getChannelList();
     }
 
+    // 채널 생성
     @PostMapping("")
     public String createChannel(@RequestBody ChannelRequestDto requestDto){
         return channelService.createChannel(requestDto);
     }
 
-    @DeleteMapping("/{channel_id}")
-    public String deleteChannel(@PathVariable Long channel_id){
-        return channelService.deleteChannel(channel_id);
+    // 채널 삭제
+    @DeleteMapping("/{channelId}")
+    public String deleteChannel(@PathVariable Long channelId){
+        return channelService.deleteChannel(channelId);
+    }
+
+    // 채널 초대
+    @PostMapping("/invite")
+    public String inviteChannel(@RequestBody ChannelInviteRequestDto channelInviteRequestDto){
+        return channelService.inviteChannel(channelInviteRequestDto);
+    }
+
+    // 채널 나가기
+    @DeleteMapping("/exit/{channelId}")
+    public String exitChannel(@PathVariable Long channelId){
+        return channelService.exitChannel(channelId);
     }
 }
