@@ -32,19 +32,11 @@ public class ChannelService {
         User user = getCurrentUser();
         List<ChannelListDto> userChannelList = new ArrayList<>();
 
-        // 채널 생성시 inviteUserChannel에 본인도 넣을것인지? 넣는다면 어떻게?
-        // 본인도 넣는다면 생성한 채널 추가부분 필요없음
-        //생성한 채널 추가
-        List<Channel> channels = channelRepository.findAllByUser_Id(user.getId());
-        for(Channel channel:channels){
-            ChannelListDto channelListDto = new ChannelListDto(channel.getId(), channel.getChannelName(), channel.getDescription(), true);
-            userChannelList.add(channelListDto);
-        }
-
         //초대된 채널 추가
-        channels = channelRepository.findAllByInviteUserChannel_UserId(user.getId());
+        List<Channel>channels = channelRepository.findAllByInviteUserChannel_UserId(user.getId());
         for(Channel channel:channels){
-            ChannelListDto channelListDto = new ChannelListDto(channel.getId(), channel.getChannelName(), channel.getDescription(), false);
+            Boolean isOwner = user.getId().equals(channel.getUser().getId());
+            ChannelListDto channelListDto = new ChannelListDto(channel.getId(), channel.getChannelName(), channel.getDescription(), isOwner);
             userChannelList.add(channelListDto);
         }
 
@@ -63,6 +55,9 @@ public class ChannelService {
         } else if(requestDto.getChannelName().isEmpty()){
             return "채널 이름을 입력하세요";
         } else{
+            //채널 생성시 inviteUser에 owner 추가
+            InviteUserChannel inviteUserChannel = new InviteUserChannel(user, channel);
+            inviteUserChannelRepository.save(inviteUserChannel);
 
             channelRepository.save(channel);
             return "채널 생성 완료";
