@@ -6,6 +6,8 @@ import com.sparta.cloneCoding.model.User;
 import com.sparta.cloneCoding.model.InviteUserChannel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface InviteUserChannelRepository extends JpaRepository<InviteUserChannel, Long> {
 
     boolean existsByChannelAndUser(Channel channel, User user);
@@ -16,5 +18,6 @@ public interface InviteUserChannelRepository extends JpaRepository<InviteUserCha
 
     boolean existsByUserAndChannelId(User user, Long channelId);
 
+    List<InviteUserChannel> findAllByChannel_Id(Long channelId);
 }
 

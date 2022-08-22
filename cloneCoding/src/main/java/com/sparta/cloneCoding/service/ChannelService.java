@@ -3,6 +3,7 @@ package com.sparta.cloneCoding.service;
 import com.sparta.cloneCoding.dto.ChannelInviteRequestDto;
 import com.sparta.cloneCoding.dto.ChannelRequestDto;
 import com.sparta.cloneCoding.dto.ChannelListDto;
+import com.sparta.cloneCoding.dto.UserListDto;
 import com.sparta.cloneCoding.model.Channel;
 import com.sparta.cloneCoding.model.InviteUserChannel;
 import com.sparta.cloneCoding.model.User;
@@ -38,6 +39,22 @@ public class ChannelService {
         }
 
         return userChannelList;
+    }
+
+    // 채널에 참가해있는 유저 조회
+    public List<UserListDto> getUserListInChannel (Long channelId){
+        List<UserListDto> userLists = new ArrayList<>();
+
+        List<InviteUserChannel> inviteUserChannels = inviteUserChannelRepository.findAllByChannel_Id(channelId);
+
+        for(InviteUserChannel inviteUserChannel : inviteUserChannels){
+            UserListDto userListDto = new UserListDto(inviteUserChannel.getUser().getId(),
+                    inviteUserChannel.getUser().getUsername(),
+                    inviteUserChannel.getUser().getNickname());
+            userLists.add(userListDto);
+        }
+
+        return userLists;
     }
 
     // 채널 생성
@@ -96,7 +113,6 @@ public class ChannelService {
             inviteUserChannelRepository.delete(inviteUserChannel);
             return "채널 나가기 성공";
         }
-
     }
 
     public User getCurrentUser() {
