@@ -18,11 +18,6 @@ public class ResponseDto<T> {
     private Long userId;
     private String username;
     private String nickname;
-    private String iconUrl;
-    public ResponseDto (boolean response, String message) {
-        this.response = response;
-        this.message = message;
-    }
     public ResponseDto(boolean response, String message,List<T> userChannelList) {
         this.response = response;
         this.message = message;
@@ -31,14 +26,5 @@ public class ResponseDto<T> {
     public ResponseDto(boolean response,List<T> list) {
         this.response = response;
         this.list = list;
-    }
-
-
-    public ResponseDto(boolean response, Long userId, String username, String nickname, String iconUrl) {
-        this.response = response;
-        this.userId = userId;
-        this.username = username;
-        this.nickname = nickname;
-        this.iconUrl = iconUrl;
     }
 }

@@ -31,11 +31,10 @@ public class MessageController {
 
     //메세지 작성
     @MessageMapping("/message/{channel_Id}")
-    @SendTo("/sub/message/{channel_Id}")
     public void chatting(MessageDto messageDto, @DestinationVariable Long channel_Id) {
 
         messageDto = messageService.sendMessage(messageDto, channel_Id);
-        simpMessagingTemplate.convertAndSend("/sub/channel/" + channel_Id, messageDto);
+        simpMessagingTemplate.convertAndSend("/sub/message/" + channel_Id, messageDto);
     }
 
 }

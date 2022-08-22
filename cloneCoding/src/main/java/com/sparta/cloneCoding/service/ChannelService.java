@@ -23,6 +23,7 @@ public class ChannelService {
     private final UserRepository userRepository;
     private final InviteUserChannelRepository inviteUserChannelRepository;
     private final MessageRepository messageRepository;
+    private final InviteUserChannel inviteUserChannel;
     
 
     // 채널 조회
@@ -67,7 +68,7 @@ public class ChannelService {
             return "채널 생성 완료";
         }
     }
-
+    
     // 채널에 초대
     public String inviteChannel(ChannelInviteRequestDto channelInviteRequestDto){
         
