@@ -86,3 +86,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .apply(new JwtSecurityConfig(tokenProvider));
     }
 }
+
+
