@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -59,30 +58,26 @@ public class ChannelService {
 
     // 채널 생성
     @Transactional
-    public String createChannel(ChannelRequestDto requestDto) {
+    public ChannelListDto createChannel(ChannelRequestDto requestDto) {
         User user = getCurrentUser();
-
         Channel channel = new Channel(requestDto, user);
-        Optional<Channel> dupleNameCheck = channelRepository.findByChannelName(channel.getChannelName());
-        if (dupleNameCheck.isPresent()) {
-            return "해당 이름은 채널, 사용자 이름 또는 사용자 그룹에서 이미 사용 중입니다.";
-        } else if (requestDto.getChannelName().isEmpty()) {
-            return "채널 이름을 입력하세요";
-        } else {
-            //채널 생성시 inviteUser에 owner 추가
-            InviteUserChannel inviteUserChannel = new InviteUserChannel(user, channel);
-            inviteUserChannelRepository.save(inviteUserChannel);
 
-            channelRepository.save(channel);
-            return "채널 생성 완료";
-        }
+        // 채널 생성자도 inviteUser 목록에 추가
+        InviteUserChannel inviteUserChannel = new InviteUserChannel(user, channel);
+        inviteUserChannelRepository.save(inviteUserChannel);
+
+        channelRepository.save(channel);
+
+        // CahnnelList형태로 리턴 (channel_id, channelName, description, Owner/항상 true)
+        ChannelListDto newChannelInfo = new ChannelListDto(channel.getId(), channel.getChannelName(), channel.getDescription(), true);
+
+        return newChannelInfo;
     }
-
     // 채널에 초대(1명씩만 username으로 초대가능)
-    public String inviteChannel(ChannelInviteRequestDto channelInviteRequestDto) {
-        User inviteUser = userRepository.findByUsername(channelInviteRequestDto.getInviteUser()).orElseThrow(
+    public ChannelInviteRequestDto inviteChannel(ChannelInviteRequestDto channelInviteRequestDto) {
+        User inviteUser = userRepository.findByUsername(channelInviteRequestDto.getUsername()).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 유저입니다"));
-        Channel channel = channelRepository.findById(channelInviteRequestDto.getChannelId()).orElseThrow(
+        Channel channel = channelRepository.findById(channelInviteRequestDto.getChannel_id()).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 채널입니다"));
 
         // 초대 여부, 채널 생성자(본인) 검증
@@ -95,7 +90,7 @@ public class ChannelService {
         InviteUserChannel inviteUserChannel = new InviteUserChannel(inviteUser, channel);
         inviteUserChannelRepository.save(inviteUserChannel);
 
-        return "채널 초대 성공";
+        return channelInviteRequestDto;
     }
 
     // 채널 나가기 (채널 생성자의 경우 나가기 시 채널 삭제)
