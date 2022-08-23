@@ -31,7 +31,7 @@ public class ChannelController {
 
     // 채널 생성
     @PostMapping("")
-    public ChannelRequestDto createChannel(@RequestBody ChannelRequestDto requestDto){
+    public ChannelListDto createChannel(@RequestBody ChannelRequestDto requestDto){
         return channelService.createChannel(requestDto);
     }
 

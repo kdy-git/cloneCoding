@@ -58,15 +58,20 @@ public class ChannelService {
 
     // 채널 생성
     @Transactional
-    public ChannelRequestDto createChannel(ChannelRequestDto requestDto) {
+    public ChannelListDto createChannel(ChannelRequestDto requestDto) {
         User user = getCurrentUser();
         Channel channel = new Channel(requestDto, user);
-        InviteUserChannel inviteUserChannel = new InviteUserChannel(user, channel);
 
+        // 채널 생성자도 inviteUser 목록에 추가
+        InviteUserChannel inviteUserChannel = new InviteUserChannel(user, channel);
         inviteUserChannelRepository.save(inviteUserChannel);
+
         channelRepository.save(channel);
 
-        return requestDto;
+        // CahnnelList형태로 리턴 (channel_id, channelName, description, Owner/항상 true)
+        ChannelListDto newChannelInfo = new ChannelListDto(channel.getId(), channel.getChannelName(), channel.getDescription(), true);
+
+        return newChannelInfo;
     }
     // 채널에 초대(1명씩만 username으로 초대가능)
     public ChannelInviteRequestDto inviteChannel(ChannelInviteRequestDto channelInviteRequestDto) {
