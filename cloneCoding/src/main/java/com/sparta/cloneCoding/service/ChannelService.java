@@ -77,7 +77,6 @@ public class ChannelService {
             return "채널 생성 완료";
         }
     }
-
     // 채널에 초대(1명씩만 username으로 초대가능)
     public String inviteChannel(ChannelInviteRequestDto channelInviteRequestDto) {
         User inviteUser = userRepository.findByUsername(channelInviteRequestDto.getInviteUser()).orElseThrow(
