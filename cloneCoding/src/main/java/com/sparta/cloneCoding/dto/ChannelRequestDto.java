@@ -12,7 +12,5 @@ public class ChannelRequestDto {
     public ChannelRequestDto(String channelName, String description){
         this.channelName = channelName;
         this.description = description;
-
-
     }
 }
