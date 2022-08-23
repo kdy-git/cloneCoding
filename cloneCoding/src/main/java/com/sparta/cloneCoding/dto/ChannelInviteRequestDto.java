@@ -7,5 +7,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ChannelInviteRequestDto {
     private Long channel_id;
-    private String inviteUser;
+    private String username;
 }

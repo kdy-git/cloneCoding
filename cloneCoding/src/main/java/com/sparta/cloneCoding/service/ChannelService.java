@@ -71,7 +71,7 @@ public class ChannelService {
 
     // 채널에 초대(1명씩만 username으로 초대가능)
     public ChannelInviteRequestDto inviteChannel(ChannelInviteRequestDto channelInviteRequestDto) {
-        User inviteUser = userRepository.findByUsername(channelInviteRequestDto.getInviteUser()).orElseThrow(
+        User inviteUser = userRepository.findByUsername(channelInviteRequestDto.getUsername()).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 유저입니다"));
         Channel channel = channelRepository.findById(channelInviteRequestDto.getChannel_id()).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 채널입니다"));
