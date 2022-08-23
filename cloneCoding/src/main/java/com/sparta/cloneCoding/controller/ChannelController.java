@@ -31,13 +31,13 @@ public class ChannelController {
 
     // 채널 생성
     @PostMapping("")
-    public String createChannel(@RequestBody ChannelRequestDto requestDto){
+    public ChannelRequestDto createChannel(@RequestBody ChannelRequestDto requestDto){
         return channelService.createChannel(requestDto);
     }
 
     // 채널 초대
     @PostMapping("/invite")
-    public String inviteChannel(@RequestBody ChannelInviteRequestDto channelInviteRequestDto){
+    public ChannelInviteRequestDto inviteChannel(@RequestBody ChannelInviteRequestDto channelInviteRequestDto){
         return channelService.inviteChannel(channelInviteRequestDto);
     }
 
