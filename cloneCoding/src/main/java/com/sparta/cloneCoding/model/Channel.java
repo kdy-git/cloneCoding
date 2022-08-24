@@ -32,6 +32,10 @@ public class Channel {
     @JoinColumn(name = "channel_id")
     private List<InviteUserChannel> inviteUserChannel;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "channel_id")
+    private List<Message> messages;
+
     public Channel(ChannelRequestDto requestDto, User user){
         this.channelName = requestDto.getChannelName();
         this.description = requestDto.getDescription();

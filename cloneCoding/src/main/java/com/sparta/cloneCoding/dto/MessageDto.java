@@ -24,4 +24,9 @@ public class MessageDto {
         this.nickname = message.getUser().getNickname();
 
     }
+
+    public MessageDto(Long channelId, String message){
+        this.channelId = channelId;
+        this.message = message;
+    }
 }

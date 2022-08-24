@@ -12,6 +12,7 @@ import com.sparta.cloneCoding.repository.UserRepository;
 import com.sparta.cloneCoding.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -30,6 +31,12 @@ public class MessageService {
     //채팅을 입력하기 위한 메서드.
     //유효성검사 후 메세지에 유저정보와 채널정보를 저장
     public MessageDto sendMessage(MessageDto messageDto, Long channelId) {
+        System.out.println(messageDto.getMessage());
+        System.out.println("sendmessage 안에 들어옴");
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
+        System.out.println("인증정보 받아옴");
+        // 여기서 안됨
+
         String username = userService.getMyInfo().getUsername();
         Channel channel = validateRole(channelId);
         User user = userRepository.findByUsername(username)
