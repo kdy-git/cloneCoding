@@ -5,6 +5,7 @@ import com.sparta.cloneCoding.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -27,21 +28,23 @@ public class MessageController {
 
     //메세지 작성
     @MessageMapping("/message/{channel_Id}")
-    public MessageDto chatting(@RequestBody MessageDto messageDto, @DestinationVariable Long channel_Id) {
+    public MessageDto chatting(@RequestBody MessageDto messageDto, @DestinationVariable Long channel_Id, @Header(value = "Authorization") String token) {
         try {
+
+            System.out.println(token);
             System.out.println("channelId : " + channel_Id);
 
-                MessageDto responseMessageDto = messageService.sendMessage(messageDto, channel_Id);
+            MessageDto responseMessageDto = messageService.sendMessage(messageDto, channel_Id, token);
 
-                System.out.println("토큰 받아왔을 때");
-                System.out.println("username : " + responseMessageDto.getUsername());
+            System.out.println("토큰 받아왔을 때");
+            System.out.println("username : " + responseMessageDto.getUsername());
 
-                simpMessagingTemplate.convertAndSend("/sub/message/" + channel_Id, responseMessageDto);
+            simpMessagingTemplate.convertAndSend("/sub/message/" + channel_Id, responseMessageDto);
 
-                System.out.println("정상 실행 되었을 때");
-                return responseMessageDto;
+            System.out.println("정상 실행 되었을 때");
+            return responseMessageDto;
 
-        }catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("catch 안에 들어왔을 때");
             e.printStackTrace();
             return null;

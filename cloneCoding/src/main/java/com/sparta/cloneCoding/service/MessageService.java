@@ -9,7 +9,9 @@ import com.sparta.cloneCoding.repository.ChannelRepository;
 import com.sparta.cloneCoding.repository.InviteUserChannelRepository;
 import com.sparta.cloneCoding.repository.MessageRepository;
 import com.sparta.cloneCoding.repository.UserRepository;
+import com.sparta.cloneCoding.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import java.util.stream.Collectors;
 
@@ -25,20 +27,22 @@ public class MessageService {
 
     //채팅을 입력하기 위한 메서드.
     //유효성검사 후 메세지에 유저정보와 채널정보를 저장
-    public MessageDto sendMessage(MessageDto messageDto, Long channelId) {
+    public MessageDto sendMessage(MessageDto messageDto, Long channelId, String token) {
         System.out.println(messageDto.getMessage());
         System.out.println("sendmessage 안에 들어옴");
-        System.out.println("인증정보 받아옴");
-        // 여기서 안됨
+        System.out.println(token);
 
-        String username = userService.getMyInfo().getUsername();
+        Authentication authentication = TokenProvider.getAuthentication(token.substring(7));
+        System.out.println(authentication.getName());
+
+        User user = userRepository.findById(Long.parseLong(authentication.getName()))
+                .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
+
+        String username = user.getUsername();
         System.out.println(username);
-        Channel channel = validateRole(channelId);
-        System.out.println(channelId);
 
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
-        System.out.println(user.getNickname());
+        Channel channel = validateRole(channelId, username);
+        System.out.println(channelId);
 
         messageRepository.save(Message.builder()
                 .message(messageDto.getMessage())
@@ -53,7 +57,6 @@ public class MessageService {
 
     // 채팅방 입장시 해당 채팅방의 DB저장된 메세지중 100개만 표시되도록하고, list로 return
     public ResponseDto<MessageDto> messages(Long channelId) {
-        validateRole(channelId);
         return new ResponseDto<>(true, messageRepository
                 .findTop100ByChannelIdOrderByCreatedAtDesc(channelId).stream()
                 .map(MessageDto::new)
@@ -61,10 +64,9 @@ public class MessageService {
     }
 
     //채널의 유효성 검사.
-    private Channel validateRole(Long channelId) throws IllegalArgumentException {
+    private Channel validateRole(Long channelId, String username) throws IllegalArgumentException {
 
         System.out.println("validateRole 안");
-        String username = userService.getMyInfo().getUsername();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
 
