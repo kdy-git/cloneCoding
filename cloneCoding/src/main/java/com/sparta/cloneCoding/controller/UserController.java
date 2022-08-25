@@ -17,16 +17,6 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
 
-    @GetMapping("/me")
-    public ResponseEntity<UserResponseDto> getMyUserInfo() {
-        return ResponseEntity.ok(userService.getMyInfo());
-    }
-
-    @GetMapping("/{username}")
-    public ResponseEntity<UserResponseDto> getMyUserInfo(@PathVariable String username) {
-        return ResponseEntity.ok(userService.getUserInfo(username));
-    }
-
     @GetMapping("/idCheck/{username}")
     public boolean idCheck(@PathVariable String username) {
         return !userRepository.existsByUsername(username);
