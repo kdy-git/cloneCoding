@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserRepository userRepository;
 
-    // 현재 SecurityContext 에 있는 유저 정보 가져오기
     @Transactional(readOnly = true)
     public UserResponseDto getMyInfo() {
         return userRepository.findById(SecurityUtil.getCurrentUSerId())

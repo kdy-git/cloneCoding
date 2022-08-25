@@ -19,14 +19,11 @@ import java.util.stream.Collectors;
 @Service
 public class MessageService {
 
-    private final UserService userService;
     private final UserRepository userRepository;
     private final MessageRepository messageRepository;
     private final ChannelRepository channelRepository;
     private final InviteUserChannelRepository inviteUserChannelRepository;
 
-    //채팅을 입력하기 위한 메서드.
-    //유효성검사 후 메세지에 유저정보와 채널정보를 저장
     public MessageDto sendMessage(MessageDto messageDto, Long channelId, String token) {
         System.out.println(messageDto.getMessage());
         System.out.println("sendmessage 안에 들어옴");
@@ -55,7 +52,6 @@ public class MessageService {
         return messageDto;
     }
 
-    // 채팅방 입장시 해당 채팅방의 DB저장된 메세지중 100개만 표시되도록하고, list로 return
     public ResponseDto<MessageDto> messages(Long channelId) {
         return new ResponseDto<>(true, messageRepository
                 .findTop100ByChannelIdOrderByCreatedAtDesc(channelId).stream()
@@ -63,7 +59,6 @@ public class MessageService {
                 .collect(Collectors.toList()));
     }
 
-    //채널의 유효성 검사.
     private Channel validateRole(Long channelId, String username) throws IllegalArgumentException {
 
         System.out.println("validateRole 안");
@@ -86,5 +81,4 @@ public class MessageService {
         System.out.println("3");
         return channel;
     }
-
 }

@@ -1,6 +1,5 @@
 package com.sparta.cloneCoding.dto;
 
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

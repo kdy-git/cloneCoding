@@ -1,6 +1,5 @@
 package com.sparta.cloneCoding.repository;
 
-
 import com.sparta.cloneCoding.model.Channel;
 import com.sparta.cloneCoding.model.User;
 import com.sparta.cloneCoding.model.InviteUserChannel;

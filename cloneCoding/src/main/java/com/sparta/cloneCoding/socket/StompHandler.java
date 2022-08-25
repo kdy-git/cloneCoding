@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
-
 @Component
 @RequiredArgsConstructor
 public class StompHandler implements ChannelInterceptor {

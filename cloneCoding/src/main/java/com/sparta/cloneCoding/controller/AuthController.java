@@ -7,7 +7,6 @@ import com.sparta.cloneCoding.dto.UserResponseDto;
 import com.sparta.cloneCoding.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

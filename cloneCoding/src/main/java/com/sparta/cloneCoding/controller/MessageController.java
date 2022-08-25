@@ -18,7 +18,6 @@ public class MessageController {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final MessageService messageService;
 
-    //채팅방 입장.
     @ResponseBody
     @GetMapping("/entry/{channel_Id}")
     public ResponseEntity<?> chatRoomEntry(@PathVariable Long channel_Id) {
@@ -26,7 +25,6 @@ public class MessageController {
         return ResponseEntity.ok().body(messageService.messages(channel_Id));
     }
 
-    //메세지 작성
     @MessageMapping("/message/{channel_Id}")
     public MessageDto chatting(@RequestBody MessageDto messageDto, @DestinationVariable Long channel_Id, @Header(value = "Authorization") String token) {
         try {

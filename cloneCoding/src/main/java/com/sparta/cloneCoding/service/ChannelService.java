@@ -23,13 +23,11 @@ public class ChannelService {
     private final UserRepository userRepository;
     private final InviteUserChannelRepository inviteUserChannelRepository;
 
-    // 채널 조회
     @Transactional
     public List<ChannelListDto> getChannelList() {
         User user = getCurrentUser();
         List<ChannelListDto> userChannelList = new ArrayList<>();
 
-        //초대된 채널 추가
         List<Channel> channels = channelRepository.findAllByInviteUserChannel_UserId(user.getId());
         for (Channel channel : channels) {
             Boolean isOwner = user.getId().equals(channel.getUser().getId());
@@ -40,7 +38,6 @@ public class ChannelService {
         return userChannelList;
     }
 
-    // 채널에 참가해있는 유저 조회
     public List<UserListDto> getUserListInChannel (Long channelId){
         List<UserListDto> userLists = new ArrayList<>();
 
@@ -56,31 +53,27 @@ public class ChannelService {
         return userLists;
     }
 
-    // 채널 생성
     @Transactional
     public ChannelListDto createChannel(ChannelRequestDto requestDto) {
         User user = getCurrentUser();
         Channel channel = new Channel(requestDto, user);
 
-        // 채널 생성자도 inviteUser 목록에 추가
         InviteUserChannel inviteUserChannel = new InviteUserChannel(user, channel);
         inviteUserChannelRepository.save(inviteUserChannel);
 
         channelRepository.save(channel);
 
-        // CahnnelList형태로 리턴 (channel_id, channelName, description, Owner/항상 true)
         ChannelListDto newChannelInfo = new ChannelListDto(channel.getId(), channel.getChannelName(), channel.getDescription(), true);
 
         return newChannelInfo;
     }
-    // 채널에 초대(1명씩만 username으로 초대가능)
+
     public ChannelInviteRequestDto inviteChannel(ChannelInviteRequestDto channelInviteRequestDto) {
         User inviteUser = userRepository.findByUsername(channelInviteRequestDto.getUsername()).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 유저입니다"));
         Channel channel = channelRepository.findById(channelInviteRequestDto.getChannel_id()).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 채널입니다"));
 
-        // 초대 여부, 채널 생성자(본인) 검증
         if (inviteUserChannelRepository.existsByUserAndChannel(inviteUser, channel)) {
             throw new IllegalArgumentException("이미 초대된 유저가 포함되어 있습니다");
         } else if (channel.getUser() == inviteUser) {
@@ -93,14 +86,12 @@ public class ChannelService {
         return channelInviteRequestDto;
     }
 
-    // 채널 나가기 (채널 생성자의 경우 나가기 시 채널 삭제)
     public String exitChannel(Long channelId) {
         User user = getCurrentUser();
         Channel channel = channelRepository.findById(channelId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 채널입니다"));
 
         if (user.getId().equals(channel.getUser().getId())) {
-            // 채널 생성자의 경우 채널 및 초대된 유저들도 나가기(cascade)
             channelRepository.delete(channel);
             return "채널 삭제 및 나가기 성공";
         } else {

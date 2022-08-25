@@ -1,6 +1,5 @@
 package com.sparta.cloneCoding.config;
 
-
 import com.sparta.cloneCoding.security.JwtFilter;
 import com.sparta.cloneCoding.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
