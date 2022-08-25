@@ -89,17 +89,17 @@ public class AuthService {
         return tokenDto;
     }
     @Transactional
-    public void logout(TokenRequestDto tokenRequestDto) {
+    public void logout(String token) {
         // 2. Access Token 에서 user ID 가져오기
-        Authentication authentication = tokenProvider.getAuthentication(tokenRequestDto.getAccessToken());
+        Authentication authentication = tokenProvider.getAuthentication(token.substring(7));
 
         // 3. 저장소에서 user ID 를 기반으로 Refresh Token 값 가져옴
         RefreshToken refreshToken = refreshTokenRepository.findByKey(authentication.getName())
                 .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
 
-        if (refreshToken.getValue().equals(tokenRequestDto.getRefreshToken())) {
+//        if (refreshToken.getValue().equals(tokenRequestDto.getRefreshToken())) {
             refreshTokenRepository.delete(refreshToken);
-        }
+//        }
     }
 }
 
