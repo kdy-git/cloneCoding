@@ -9,13 +9,8 @@ import com.sparta.cloneCoding.repository.ChannelRepository;
 import com.sparta.cloneCoding.repository.InviteUserChannelRepository;
 import com.sparta.cloneCoding.repository.MessageRepository;
 import com.sparta.cloneCoding.repository.UserRepository;
-import com.sparta.cloneCoding.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import java.lang.reflect.Field;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -33,14 +28,17 @@ public class MessageService {
     public MessageDto sendMessage(MessageDto messageDto, Long channelId) {
         System.out.println(messageDto.getMessage());
         System.out.println("sendmessage 안에 들어옴");
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
         System.out.println("인증정보 받아옴");
         // 여기서 안됨
 
         String username = userService.getMyInfo().getUsername();
+        System.out.println(username);
         Channel channel = validateRole(channelId);
+        System.out.println(channelId);
+
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
+        System.out.println(user.getNickname());
 
         messageRepository.save(Message.builder()
                 .message(messageDto.getMessage())
@@ -65,6 +63,7 @@ public class MessageService {
     //채널의 유효성 검사.
     private Channel validateRole(Long channelId) throws IllegalArgumentException {
 
+        System.out.println("validateRole 안");
         String username = userService.getMyInfo().getUsername();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
@@ -72,14 +71,17 @@ public class MessageService {
         if (username == null) {
             throw new IllegalArgumentException("로그인이 필요합니다");
         }
+        System.out.println("1");
 
         Channel channel = channelRepository.findById(channelId).orElseThrow(() ->
                 new IllegalArgumentException("채널이 존재하지 않습니다.")
         );
+        System.out.println("2");
 
         if(!inviteUserChannelRepository.existsByChannelAndUser(channel, user)) {
             throw new IllegalArgumentException("초대되지 않은 채팅방 입니다.");
         }
+        System.out.println("3");
         return channel;
     }
 
